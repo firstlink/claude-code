@@ -1,0 +1,38 @@
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/scripts/01-format.sh"
+          },
+          {
+            "type": "command",
+            "command": "~/.claude/scripts/02-lint.sh"
+          },
+          {
+            "type": "command",
+            "command": "~/.claude/scripts/03-git-stage.sh"
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/scripts/activity-logger.sh"
+          },
+          {
+            "type": "command",
+            "command": "~/.claude/scripts/safety-guard.sh"
+          }
+        ]
+      }
+    ]
+  }
+}
