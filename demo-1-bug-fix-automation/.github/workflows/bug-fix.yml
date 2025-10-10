@@ -1,0 +1,74 @@
+name: Claude Bug Fix Automation
+
+on:
+  issues:
+    types: [labeled]
+
+permissions:
+  contents: write
+  issues: write
+  pull-requests: write
+
+jobs:
+  auto-fix-bug:
+    # Only run when issue is labeled with 'bug'
+    if: github.event.label.name == 'bug'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Run Claude to fix the bug
+        uses: anthropics/claude-code-action@v1
+        with:
+          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          model: claude-sonnet-4-20250514
+          # Claude will analyze the issue and attempt to fix it
+          prompt: |
+            A bug has been reported in issue #${{ github.event.issue.number }}.
+
+            Issue Title: ${{ github.event.issue.title }}
+            Issue Body: ${{ github.event.issue.body }}
+
+            Please:
+            1. Read the issue description carefully
+            2. Locate the file(s) mentioned in the issue
+            3. Identify and fix the bug (missing semicolons in TypeScript)
+            4. Create a git branch named 'fix/issue-${{ github.event.issue.number }}'
+            5. Commit your changes with a clear commit message
+            6. Create a pull request that references this issue
+
+            Important: Add semicolons to all statements that are missing them in the TypeScript file.
+
+          # Set appropriate timeout (5 minutes)
+          timeout_minutes: 5
+
+      - name: Comment on issue
+        if: success()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: '🤖 Claude has analyzed this bug and created a fix! Please check the pull request for the proposed solution.'
+            })
+
+      - name: Handle failure
+        if: failure()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: '❌ Claude encountered an issue while trying to fix this bug. Please check the workflow logs for details.'
+            })
