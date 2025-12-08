@@ -1,0 +1,13 @@
+{
+    "mcpServers": {
+        "weather": {
+            "command": "/Users/firstlinkconsultingllc/.local/bin/uv",
+            "args": [
+                "--directory",
+                "/Users/firstlinkconsultingllc/Development/MCP/mcp-server",
+                "run",
+                "weather_resource.py"
+            ]
+        }
+    }
+}

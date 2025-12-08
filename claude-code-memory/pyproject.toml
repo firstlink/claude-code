@@ -1,0 +1,15 @@
+[tool.mypy]
+strict = true
+python_version = "3.13"
+
+[tool.black]
+line-length = 88
+target-version = ["py313"]
+
+[tool.isort]
+profile = "black"
+line_length = 88
+
+[tool.pytest.ini_options]
+testpaths = ["python_test_finance_tracker.py"]
+addopts = "-v"

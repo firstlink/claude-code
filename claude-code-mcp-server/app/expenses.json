@@ -1,0 +1,14 @@
+[
+  {
+    "amount": 10.0,
+    "category": "Grocery",
+    "description": "Food and regular grocery items",
+    "date": "2025-09-18T21:43:24.502312"
+  },
+  {
+    "amount": 15.0,
+    "category": "Travel",
+    "description": "Travel to London",
+    "date": "2025-09-18T21:54:37.464658"
+  }
+]
